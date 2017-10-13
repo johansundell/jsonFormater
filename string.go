@@ -11,7 +11,7 @@ func GetFromReader(r io.Reader) (string, error) {
 	if err := json.NewDecoder(r).Decode(&input); err != nil {
 		return "", err
 	}
-	b := bytes.NewBufferString("")
+	b := &bytes.Buffer{}
 	e := json.NewEncoder(b)
 	e.SetEscapeHTML(false)
 	e.SetIndent("", "\t")
