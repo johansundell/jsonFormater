@@ -1,18 +1,23 @@
 package jsonFormater
 
 import (
+	"bytes"
 	"encoding/json"
 	"io"
 )
 
-func getFromReader(r io.Reader) (string, error) {
+func GetFromReader(r io.Reader) (string, error) {
 	var input map[string]interface{}
-	if err := json.NewDecoder(r).Decode(input); err != nil {
+	if err := json.NewDecoder(r).Decode(&input); err != nil {
 		return "", err
 	}
-	result, err := json.MarshalIndent(input, "", "\t")
+	b := bytes.NewBufferString("")
+	e := json.NewEncoder(b)
+	e.SetEscapeHTML(false)
+	e.SetIndent("", "\t")
+	err := e.Encode(input)
 	if err != nil {
 		return "", err
 	}
-	return string(result), nil
+	return b.String(), nil
 }
